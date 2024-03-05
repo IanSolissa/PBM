@@ -1,0 +1,19 @@
+{
+    "version":"2.0.0",
+    "tasks":[{
+                "label":"run java SimpelGame",
+                "type":"shell",
+                "command":"java",
+                "args": [
+                    // "-cp ./bin tutorial.latihan.SimpelGame"
+                    "-cp",
+                    "./bin",
+                    "tutorial.Latihan.SimpelGame",
+                    
+                ],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true,
+                }
+    }]
+}
