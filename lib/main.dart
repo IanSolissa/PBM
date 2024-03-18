@@ -1,324 +1,232 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
-void main(List<String> args) {
-  runApp(Presensi());
+void main() {
+  runApp(MyApp());
 }
 
-class Presensi extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Absensi Mahasiswa"),
-          centerTitle: true,
-          backgroundColor: Colors.greenAccent,
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         ),
-        body: ListView(
+        home: MyHomePage(),
+      ),
+    );
+  }
+}
+
+class MyAppState extends ChangeNotifier {
+  var current = WordPair.random();
+
+  void getNext() {
+    current = WordPair.random();
+    notifyListeners();
+  }
+
+  // ↓ Add the code below.
+  var favorites = <WordPair>[];
+
+  void toggleFavorite() {
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
+}
+
+// ...
+
+// ...
+
+// ...
+
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+// ...
+
+// ...
+
+class _MyHomePageState extends State<MyHomePage> {
+  var selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+        break;
+      case 1:
+        page = FavoritesPage();
+        break;
+      default:
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
+
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        body: Row(
           children: [
-            Container(
-              height: 2,
-              color: Colors.black,
-            ),
-            Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.lightGreen,
-                  margin: EdgeInsets.all(20),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.lightGreen,
-                  margin: EdgeInsets.all(20),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.lightGreen,
-                  margin: EdgeInsets.all(20),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.lightGreen,
-                  margin: EdgeInsets.all(20),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.lightGreen,
-                  margin: EdgeInsets.all(20),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.lightGreen,
-                  margin: EdgeInsets.all(20),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.lightGreen,
-                  margin: EdgeInsets.all(20),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.lightGreen,
-                  margin: EdgeInsets.all(20),
-                ),
-              ],
-            ),
-            Container(
-              height: 2,
-              color: Colors.black,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
+            SafeArea(
+              child: NavigationRail(
+                extended: constraints.maxWidth >= 600, // ← Here.
+                destinations: [
+                  NavigationRailDestination(
+                    icon: Icon(Icons.home),
+                    label: Text('Home'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.favorite),
+                    label: Text('Favorites'),
+                  ),
+                ],
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (value) {
+                  setState(() {
+                    selectedIndex = value;
+                  });
+                },
               ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
             ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
               ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
-            ),
-            ListTile(
-              title: Text(
-                "Nama Mahasiswa",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-              subtitle: Text("Apakah Hari Ini Ada Kelas?"),
-              trailing: Text("10:00 AM"),
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-              ),
-              dense: true,
-              tileColor: Colors.grey[350],
-            ),
-            Container(
-              height: 5,
-              color: Colors.white,
             ),
           ],
         ),
+      );
+    });
+  }
+}
+
+// ...
+// ...
+class GeneratorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    var pair = appState.current;
+
+    IconData icon;
+    if (appState.favorites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BigCard(pair: pair),
+          SizedBox(height: 10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  appState.toggleFavorite();
+                },
+                icon: Icon(icon),
+                label: Text('Like'),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  appState.getNext();
+                },
+                child: Text('Next'),
+              ),
+            ],
+          ),
+        ],
       ),
+    );
+  }
+}
+
+// ...
+// ...
+// ...
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+// ...
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+
+    return Card(
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+
+        // ↓ Make the following change.
+        child: Text(
+          pair.asLowerCase,
+          style: style,
+          semanticsLabel: "${pair.first} ${pair.second}",
+        ),
+      ),
+    );
+  }
+
+// ...
+}
+
+// ...
+
+class FavoritesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    if (appState.favorites.isEmpty) {
+      return Center(
+        child: Text('No favorites yet.'),
+      );
+    }
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text('You have '
+              '${appState.favorites.length} favorites:'),
+        ),
+        for (var pair in appState.favorites)
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text(pair.asLowerCase),
+          ),
+      ],
     );
   }
 }
